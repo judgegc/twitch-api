@@ -7,6 +7,8 @@ import { EntryPoint } from './decorators/entrypoint';
 import { QueryString } from './decorators/query-string';
 import { DataString } from './decorators/data-string';
 
+import { Requestor } from './requestor';
+
 import { currentMethodName, extractMetadata, ExtractedMetadata } from './decorators/helpers';
 
 export abstract class BaseApi {
@@ -15,11 +17,18 @@ export abstract class BaseApi {
 
     protected abstract get headers(): { [param: string]: string };
 
+    private requester: Requestor;
+
+    constructor(private providerType) {
+        this.requester = new this.providerType();
+    }
+
     protected process(args): Observable<any> {
         let meta = extractMetadata(this, currentMethodName(args));
         let params = this.buildDataTables(meta, args);
         let path = this.buildQuery(meta.resource, params.queryString);
-        return this.request(meta.method, path, params.dataString);
+        //return this.request(meta.method, path, params.dataString);
+        return this.requester.request(meta.method, this.entry + path, params.dataString, this.headers)
     }
 
     private buildDataTables(meta: ExtractedMetadata, data: any[]): {
@@ -51,7 +60,7 @@ export abstract class BaseApi {
         return { queryString: transformMeta(meta.queryStringList), dataString: transformMeta(meta.dataStringList) };
     }
 
-    private request(
+    /* private request(
         method: RequestMethod,
         path: string,
         dataString: { [param: string]: string | number } = {}): Observable<any> {
@@ -59,7 +68,7 @@ export abstract class BaseApi {
         return Observable
             .ajax({ method: method, url: this.entry + path, body: dataString, headers: this.headers, responseType: 'json' })
             .map(r => r.response);
-    }
+    } */
 
     private buildQuery(resource: string, queryStringVars: { [param: string]: string | number }): string {
         let nonTempParams = queryStringVars;

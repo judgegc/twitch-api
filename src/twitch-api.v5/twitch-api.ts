@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { Observable } from 'rxjs';
 
 import { BaseApi, EntryPoint, RequestMethod, QueryString, DataString } from './../base-api';
+import { Requestor } from './../base-api';
 
 import { GetLiveStreamsInput, GetLiveStreamsOutput } from './types';
 
@@ -49,7 +50,7 @@ export interface Credentials {
     oAuth?: string;
 }
 
-export class TwitchApi extends BaseApi {
+export class TwitchApi<Requestor> extends BaseApi {
 
     protected get entry() {
         return 'https://api.twitch.tv/kraken';
@@ -75,8 +76,8 @@ export class TwitchApi extends BaseApi {
 
     set oAuth(token: string) { this.cred.oAuth = token; }
 
-    constructor(private cred: Credentials) {
-        super();
+    constructor(private cred: Credentials, private provider: Requestor) {
+        super(provider);
     }
 
     protected process(args): Observable<any> {
