@@ -1,5 +1,4 @@
-export enum RequestMethod
-{
+export enum RequestMethod {
     Get = 'GET',
     Post = 'POST',
     Put = 'PUT',

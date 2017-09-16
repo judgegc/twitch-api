@@ -13,7 +13,6 @@ export interface GetChannelVideosOutput {
     videos: Video[];
 }
 
-
 export interface Preview {
     small: string;
     medium: string;
@@ -92,6 +91,3 @@ export interface Video {
     resolutions: Resolutions;
     channel: Channel;
 }
-
-
-

@@ -15,7 +15,3 @@ export interface Community {
     avatar_image_url: string;
     cover_image_url: string;
 }
-
-
-
-

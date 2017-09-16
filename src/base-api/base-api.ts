@@ -28,7 +28,7 @@ export abstract class BaseApi {
         let params = this.buildDataTables(meta, args);
         let path = this.buildQuery(meta.resource, params.queryString);
         //return this.request(meta.method, path, params.dataString);
-        return this.requester.request(meta.method, this.entry + path, params.dataString, this.headers)
+        return this.requester.request(meta.method, this.entry + path, params.dataString, this.headers);
     }
 
     private buildDataTables(meta: ExtractedMetadata, data: any[]): {
@@ -36,8 +36,10 @@ export abstract class BaseApi {
         dataString: { [param: string]: string | number }
     } {
         let transformMeta = (list: { name: string, index: number }[]) => {
-            if (!list)
+            if (!list) {
                 return {};
+            }
+
             let result: { [param: string]: string | number | Object } = {};
             list.forEach(x => {
                 if (x.name && typeof data[x.index] === 'object') {
@@ -46,8 +48,7 @@ export abstract class BaseApi {
                         obj[prop] = data[x.index][prop];
                     }
                     result[x.name] = obj;
-                }
-                else if (x.name) {
+                } else if (x.name) {
                     result[x.name] = data[x.index];
                 } else if (typeof data[x.index] === 'object') {
                     for (let prop in data[x.index]) {
@@ -56,7 +57,7 @@ export abstract class BaseApi {
                 }
             });
             return result;
-        }
+        };
         return { queryString: transformMeta(meta.queryStringList), dataString: transformMeta(meta.dataStringList) };
     }
 
@@ -74,8 +75,9 @@ export abstract class BaseApi {
         let nonTempParams = queryStringVars;
         let path = resource.replace(/\{(\w+)\}/g, (match, paramName) => {
             let val = queryStringVars[paramName];
-            if (!val)
+            if (!val) {
                 throw Error('Missing template var: \'' + paramName + '\'');
+            }
             delete nonTempParams[paramName];
             return <string>val;
         });

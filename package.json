@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",
-    "serve": "webpack-dev-server -d"
+    "serve": "webpack-dev-server -d",
+    "lint": "tslint -c tslint.json \"src/**/*.ts\""
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "copy-webpack-plugin": "^4.0.1",
     "ts-loader": "^2.3.4",
+    "tslint": "^5.7.0",
     "typescript": "^2.5.2",
     "webpack": "^3.5.5",
     "webpack-dev-server": "^2.7.1"

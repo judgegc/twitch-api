@@ -1,12 +1,10 @@
 import { Comment } from './../shared';
 
-export interface GetFeedCommentsInput
-{
+export interface GetFeedCommentsInput {
     limit?: number;
     cursor?: string;
 }
 
-export interface GetFeedCommentsOutput
-{
+export interface GetFeedCommentsOutput {
     comments: Comment[];
 }

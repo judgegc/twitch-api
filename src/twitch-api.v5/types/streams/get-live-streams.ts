@@ -1,12 +1,12 @@
 import { Channel, Preview } from './../shared';
 
 export interface GetLiveStreamsInput {
-    channel?: number[], //channel id's
-    game?: string,
-    language?: string,
-    stream_type?: string,
-    limit?: number,
-    offset?: number
+    channel?: number[]; //channel id's
+    game?: string;
+    language?: string;
+    stream_type?: string;
+    limit?: number;
+    offset?: number;
 }
 
 export interface GetLiveStreamsOutput {
@@ -28,6 +28,3 @@ export interface GetLiveStreamsOutput {
         channel: Channel;
     }[];
 }
-
-
-

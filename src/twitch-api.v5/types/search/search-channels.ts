@@ -9,5 +9,3 @@ export interface SearchChannelsOutput {
     _total: number;
     channels: Channel[];
 }
-
-

@@ -12,5 +12,3 @@ export interface GetTeamOutput {
     background?: any;
     users: Channel[];
 }
-
-

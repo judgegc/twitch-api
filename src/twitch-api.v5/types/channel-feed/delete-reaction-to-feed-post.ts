@@ -1,4 +1,3 @@
-export interface DeleteReactionToFeedPostOutput
-{
+export interface DeleteReactionToFeedPostOutput {
     deleted: boolean;
 }

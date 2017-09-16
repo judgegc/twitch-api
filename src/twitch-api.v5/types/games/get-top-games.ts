@@ -15,6 +15,3 @@ export interface Top {
     viewers: number;
     channels: number;
 }
-
-
-

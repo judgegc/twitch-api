@@ -65,7 +65,6 @@ export class TwitchApi<Requestor> extends BaseApi {
         };
     }
 
-
     private scopes: Scope[];
 
     get clientId(): string { return this.cred.clientId; }
@@ -180,7 +179,6 @@ export class TwitchApi<Requestor> extends BaseApi {
     ): Observable<DeleteReactionToFeedCommentOutput> {
         return this.process(arguments);
     }
-
 
     @EntryPoint(RequestMethod.Get, '/channel')
     getChannel(): Observable<GetChannelOutput> {

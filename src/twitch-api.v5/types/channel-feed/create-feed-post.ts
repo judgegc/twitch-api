@@ -4,5 +4,3 @@ export interface CreateFeedPostOutput {
     post: Post;
     tweet: string;
 }
-
-

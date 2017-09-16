@@ -18,7 +18,3 @@ export interface Follow {
     notifications: boolean;
     user: User;
 }
-
-
-
-

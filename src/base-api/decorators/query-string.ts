@@ -8,8 +8,7 @@ export function QueryString(param: string = '') {
         if (Reflect.hasMetadata(queryStringSymbol, target, propertyKey)) {
             let storage: MetaVar[] = Reflect.getMetadata(queryStringSymbol, target, propertyKey);
             storage.push({ name: param, index: parameterIndex });
-        }
-        else {
+        } else {
             Reflect.defineMetadata(queryStringSymbol, [{ name: param, index: parameterIndex }], target, propertyKey);
         }
     };

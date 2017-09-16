@@ -10,5 +10,3 @@ export interface SearchStreamsOutput {
     _total: number;
     streams: Stream[];
 }
-
-

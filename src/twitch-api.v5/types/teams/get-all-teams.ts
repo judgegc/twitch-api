@@ -8,4 +8,3 @@ export interface GetAllTeamsInput {
 export interface GetAllTeamsOutput {
     teams: Team[];
 }
-

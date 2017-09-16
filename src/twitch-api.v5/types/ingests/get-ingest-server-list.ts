@@ -9,5 +9,3 @@ export interface Ingest {
     name: string;
     default: boolean;
 }
-
-

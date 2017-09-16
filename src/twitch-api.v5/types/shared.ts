@@ -97,7 +97,6 @@ export interface Emote {
     start: number;
 }
 
-
 export interface Permissions {
     can_delete: boolean;
 }
@@ -106,7 +105,7 @@ export interface Reactions {
     [key: number]: { count: number, emote: string, user_ids: number[] };
 }
 
-export interface Comments{
+export interface Comments {
     comments: Comment[];
     _cursor: string;
     _total: number;

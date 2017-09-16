@@ -13,4 +13,3 @@ export interface Featured {
 export interface GetFeaturedStreamsOutput {
     featured: Featured[];
 }
-

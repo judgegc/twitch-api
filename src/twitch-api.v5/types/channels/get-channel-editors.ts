@@ -1,6 +1,5 @@
 import { User } from './../shared';
 
-export interface GetChannelEditorsOutput
-{
+export interface GetChannelEditorsOutput {
     users: User[];
 }

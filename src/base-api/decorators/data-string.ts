@@ -8,8 +8,7 @@ export function DataString(param: string = '') {
         if (Reflect.hasMetadata(dataStringSymbol, target, propertyKey)) {
             let storage: MetaVar[] = Reflect.getMetadata(dataStringSymbol, target, propertyKey);
             storage.push({ name: param, index: parameterIndex });
-        }
-        else {
+        } else {
             Reflect.defineMetadata(dataStringSymbol, [{ name: param, index: parameterIndex }], target, propertyKey);
         }
     };
