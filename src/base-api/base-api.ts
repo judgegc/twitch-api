@@ -9,7 +9,9 @@ import { DataString } from './decorators/data-string';
 
 import { Requestor } from './requestor';
 
+import { ParametersPackMethod, QueryParamsPacketSettings } from './types';
 import { currentMethodName, extractMetadata, ExtractedMetadata } from './decorators/helpers';
+import { QueryParamsExtractor, DataParamsExtractor } from './extractors';
 
 export abstract class BaseApi {
 
@@ -17,82 +19,33 @@ export abstract class BaseApi {
 
     protected abstract get headers(): { [param: string]: string };
 
-    private requester: Requestor;
+    protected abstract pathBuilder(path: string, queryParams: { [param: string]: string | number | any[] }): string;
+
+    protected abstract dataBuilder(data: Object): any;
+
+    private requestor: Requestor;
 
     constructor(private providerType) {
-        this.requester = new this.providerType();
+        this.requestor = new this.providerType();
     }
 
     protected process(args): Observable<any> {
         let meta = extractMetadata(this, currentMethodName(args));
-        let params = this.buildDataTables(meta, args);
-        let path = this.buildQuery(meta.resource, params.queryString);
-        //return this.request(meta.method, path, params.dataString);
-        return this.requester.request(meta.method, this.entry + path, params.dataString, this.headers);
+        const qParams = new QueryParamsExtractor(meta.queryStringList, args).extract();
+        const dParams = new DataParamsExtractor(meta.dataStringList, args).extract();
+
+        const prePath = this.processPathTemplate(meta.resource, qParams);
+        return this.requestor.request(meta.method, this.entry + this.pathBuilder(prePath, qParams), this.dataBuilder(dParams), this.headers);
     }
 
-    private buildDataTables(meta: ExtractedMetadata, data: any[]): {
-        queryString: { [param: string]: string | number },
-        dataString: { [param: string]: string | number }
-    } {
-        let transformMeta = (list: { name: string, index: number }[]) => {
-            if (!list) {
-                return {};
-            }
-
-            let result: { [param: string]: string | number | Object } = {};
-            list.forEach(x => {
-                if (x.name && typeof data[x.index] === 'object') {
-                    let obj: { [param: string]: string | number } = {};
-                    for (let prop in data[x.index]) {
-                        obj[prop] = data[x.index][prop];
-                    }
-                    result[x.name] = obj;
-                } else if (x.name) {
-                    result[x.name] = data[x.index];
-                } else if (typeof data[x.index] === 'object') {
-                    for (let prop in data[x.index]) {
-                        result[prop] = data[x.index][prop];
-                    }
-                }
-            });
-            return result;
-        };
-        return { queryString: transformMeta(meta.queryStringList), dataString: transformMeta(meta.dataStringList) };
-    }
-
-    /* private request(
-        method: RequestMethod,
-        path: string,
-        dataString: { [param: string]: string | number } = {}): Observable<any> {
-
-        return Observable
-            .ajax({ method: method, url: this.entry + path, body: dataString, headers: this.headers, responseType: 'json' })
-            .map(r => r.response);
-    } */
-
-    private buildQuery(resource: string, queryStringVars: { [param: string]: string | number }): string {
-        let nonTempParams = queryStringVars;
-        let path = resource.replace(/\{(\w+)\}/g, (match, paramName) => {
-            let val = queryStringVars[paramName];
+    private processPathTemplate(resource: string, queryParams: { [param: string]: string | number | any[] }) {
+        return resource.replace(/\{(\w+)\}/g, (match, paramName) => {
+            let val = queryParams[paramName];
             if (!val) {
                 throw Error('Missing template var: \'' + paramName + '\'');
             }
-            delete nonTempParams[paramName];
+            delete queryParams[paramName];
             return <string>val;
         });
-
-        Object.keys(nonTempParams)
-            .filter(x => nonTempParams[x] === null)
-            .forEach(x => delete nonTempParams[x]);
-
-        if (Object.keys(nonTempParams).length) {
-            return path + '?' + encodeURI(Object.keys(nonTempParams)
-                .map(x => x + '=' + nonTempParams[x])
-                .join('&'));
-        } else {
-            return path;
-        }
-
     }
 }

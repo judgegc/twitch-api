@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Observable } from 'rxjs';
 
-import { BaseApi, EntryPoint, RequestMethod, QueryString, DataString } from './../base-api';
+import { BaseApi, EntryPoint, RequestMethod, QueryString, DataString, ParametersPackMethod } from './../base-api';
 import { Requestor } from './../base-api';
 
 import { GetLiveStreamsInput, GetLiveStreamsOutput } from './types';
@@ -65,6 +65,20 @@ export class TwitchApi<Requestor> extends BaseApi {
         };
     }
 
+    protected pathBuilder(path: string, queryParams: { [param: string]: string | number | any[] }): string {
+        if (Object.keys(queryParams).length > 0) {
+            return path + '?' + encodeURI(Object.keys(queryParams)
+                .map(x => x + '=' + queryParams[x])
+                .join('&'));
+        } else {
+            return path;
+        }
+    }
+
+    protected dataBuilder(data: Object): any {
+        return data;
+    }
+
     private scopes: Scope[];
 
     get clientId(): string { return this.cred.clientId; }
@@ -75,8 +89,8 @@ export class TwitchApi<Requestor> extends BaseApi {
 
     set oAuth(token: string) { this.cred.oAuth = token; }
 
-    constructor(private cred: Credentials, private provider: Requestor) {
-        super(provider);
+    constructor(private cred: Credentials, requestor: Requestor) {
+        super(requestor);
     }
 
     protected process(args): Observable<any> {

@@ -14,7 +14,7 @@ export interface ExtractedMetadata {
     method: RequestMethod;
     resource: string;
     dataStringList: { name: string, index: number }[];
-    queryStringList: { name: string, index: number, optional: boolean }[];
+    queryStringList: { name: string, index: number}[];
 }
 
 export function extractMetadata(target: any, propertyKey: string): ExtractedMetadata {

@@ -23,8 +23,22 @@ export class TwitchApi<Requestor> extends BaseApi {
         };
     }
 
-    constructor(private cred: Credentials, private requestor: Requestor) {
+    constructor(private cred: Credentials, requestor: Requestor) {
         super(requestor);
+    }
+
+    protected pathBuilder(path: string, queryParams: { [param: string]: string | number | any[] }): string {
+        if (queryParams.length > 0) {
+            return path + '?' + encodeURI(Object.keys(queryParams)
+                .map(x => x + '=' + queryParams[x])
+                .join('&'));
+        } else {
+            return path;
+        }
+    }
+
+    protected dataBuilder(data: Object): any {
+        return data;
     }
 
     @EntryPoint(RequestMethod.Get, '/channels/{channel}/access_token')
