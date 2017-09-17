@@ -44,6 +44,7 @@ import { GetIngestServerListOutput } from './types';
 import { GetTopGamesInput, GetTopGamesOutput } from './types';
 
 import { Scope } from './scope';
+import { AuthToken } from './auth-token';
 
 export interface Credentials {
     clientId?: string;
@@ -87,15 +88,21 @@ export class TwitchApi<Requestor> extends BaseApi {
 
     get oAuth(): string { return this.cred.oAuth; }
 
-    set oAuth(token: string) { this.cred.oAuth = token; }
+    set oAuth(token: string) { this.updateScopes(); this.cred.oAuth = token; }
 
     constructor(private cred: Credentials, requestor: Requestor) {
         super(requestor);
+        this.updateScopes();
     }
 
     protected process(args): Observable<any> {
         //Тут будем чекать скоупчики
         return super.process(args);
+    }
+
+    private updateScopes() {
+        this.requestor.request(RequestMethod.Get, 'https://api.twitch.tv/kraken', null, this.headers)
+            .subscribe((x: AuthToken) => this.scopes = x.token.authorization.scopes.map(s => Scope[s]));
     }
 
     @EntryPoint(RequestMethod.Get, '/feed/{channelId}/posts')

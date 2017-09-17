@@ -23,7 +23,7 @@ export abstract class BaseApi {
 
     protected abstract dataBuilder(data: Object): any;
 
-    private requestor: Requestor;
+    protected requestor: Requestor;
 
     constructor(private providerType) {
         this.requestor = new this.providerType();
